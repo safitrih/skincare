@@ -1,40 +1,80 @@
-import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Ganti "FontAwesome" dengan ikon yang sesuai
+import React, { useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 
-const Product = ({ navigation }) => {
+// Data produk skincare (contoh data statis)
+const skincareData = [
+  {
+    id: '1',
+    name: 'Cleanser',
+    description: 'A gentle cleanser for daily use.',
+  },
+  {
+    id: '2',
+    name: 'Moisturizer',
+    description: 'Hydrates and nourishes your skin.',
+  },
+  {
+    id: '3',
+    name: 'Sunscreen',
+    description: 'Provides UV protection for your skin.',
+  },
+  // Tambahkan produk skincare lainnya
+];
+
+const App = () => {
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const handleProductPress = (product) => {
+    setSelectedProduct(product);
+  };
+
   return (
     <View style={styles.container}>
-      <Icon name="shopping-bag" size={60} style={styles.icon} /> {/* Ganti "shopping-bag" dengan ikon yang sesuai */}
-      <Text style={styles.title}>Skincer Products</Text>
-      <View style={styles.productList}>
-        {/* Tambahkan daftar produk Skincer di sini */}
-        <Text>Product 1</Text>
-        <Text>Product 2</Text>
-        <Text>Product 3</Text>
-      </View>
-      <Button title="Go to Checkout" onPress={() => navigation.navigate('Checkout')} />
+      <Text style={styles.header}>Skincare Products</Text>
+      <FlatList
+        data={skincareData}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => handleProductPress(item)} style={styles.productItem}>
+            <Text style={styles.productName}>{item.name}</Text>
+          </TouchableOpacity>
+        )}
+      />
+
+      {selectedProduct && (
+        <View style={styles.productDetail}>
+          <Text style={styles.productDetailTitle}>{selectedProduct.name}</Text>
+          <Text>{selectedProduct.description}</Text>
+        </View>
+      )}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 20,
   },
-  icon: {
-    color: '#FF5733', // Warna ikon
-  },
-  title: {
+  header: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 10,
   },
-  productList: {
+  productItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
+  },
+  productName: {
+    fontSize: 18,
+  },
+  productDetail: {
     marginTop: 20,
+  },
+  productDetailTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
 
-export default Product;
+export default App;
